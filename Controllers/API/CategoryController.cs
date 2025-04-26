@@ -9,34 +9,62 @@ namespace ECommerce.Controllers.API
     [ApiController]
     public class CategoryController : ControllerBase
     {
-
         private readonly ManageCategory _manageCategory;
+
         public CategoryController(ManageCategory manageCategory)
         {
             _manageCategory = manageCategory;
         }
 
-        [HttpPost("Save")]
+        // Save Category
+        [HttpPost]
+        [Route("Save")]
         public async Task<IActionResult> SaveCategory([FromBody] Category model)
         {
             try
             {
                 if (model == null)
                 {
-                    return BadRequest(new { Status = "Fail", Result = "Model is required" });
+                    return BadRequest(new DBResult("Fail", "Model is required"));
                 }
 
                 var dbResult = await _manageCategory.SaveCategory(model);
 
-                return Ok(new
-                {
-                    Status = dbResult.Status == "Success" ? "OK" : "Fail",
-                    Result = dbResult.Result
-                });
+                return Ok(dbResult);
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { Status = "Error", Result = ex.Message });
+                return StatusCode(500, new DBResult("Error", ex.Message));
+            }
+        }
+
+        // Delete Category
+        [HttpDelete("Delete/{categoryId}")]
+        public async Task<IActionResult> DeleteCategory(int categoryId)
+        {
+            try
+            {
+                var dbResult = await _manageCategory.DeleteCategory(categoryId);
+                return Ok(dbResult);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new DBResult("Error", ex.Message));
+            }
+        }
+
+        // Get All Categories
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAllCategories()
+        {
+            try
+            {
+                var dbResult = await _manageCategory.GetAllCategories();
+                return Ok(dbResult);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new DBResult("Error", ex.Message));
             }
         }
     }
