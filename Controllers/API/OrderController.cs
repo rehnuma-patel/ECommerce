@@ -2,6 +2,8 @@
 using DatabaseLayer.DBOperation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Threading.Tasks;
 
 namespace ECommerce.Controllers.API
 {
@@ -10,11 +12,14 @@ namespace ECommerce.Controllers.API
     public class OrderController : ControllerBase
     {
         private readonly ManageOrder _manageOrder;
-        public OrderController(ManageOrder manageOrderry)
+
+        // Constructor injection for ManageOrder
+        public OrderController(ManageOrder manageOrder)
         {
-            _manageOrder = manageOrderry;
+            _manageOrder = manageOrder;
         }
 
+        // Save order (create or update)
         [HttpPost("Save")]
         public async Task<IActionResult> SaveOrder([FromBody] Order model)
         {
@@ -37,6 +42,27 @@ namespace ECommerce.Controllers.API
             {
                 return StatusCode(500, new { Status = "Error", Result = ex.Message });
             }
+        }
+
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAllOrders()
+        {
+            var dbResult = await _manageOrder.GetAllData();
+            return Ok(dbResult);
+        }
+
+        [HttpGet("Details/{regId}")]
+        public async Task<IActionResult> GetOrderData(int regId)
+        {
+            var dbResult = await _manageOrder.GetData(regId);
+            return Ok(dbResult);
+        }
+
+        [HttpDelete("Delete/{orderId}")]
+        public async Task<IActionResult> DeleteOrder(int orderId)
+        {
+            var dbResult = await _manageOrder.DeleteOrder(orderId);
+            return Ok(dbResult);
         }
     }
 }

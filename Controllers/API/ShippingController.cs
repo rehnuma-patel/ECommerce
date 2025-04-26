@@ -1,6 +1,5 @@
 ﻿using BusinessLayer;
 using DatabaseLayer.DBOperation;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ECommerce.Controllers.API
@@ -10,7 +9,8 @@ namespace ECommerce.Controllers.API
     public class ShippingController : ControllerBase
     {
         private readonly ManageShipping _manageShipping;
-        public ShippingController(ManageShipping  manageShipping)
+
+        public ShippingController(ManageShipping manageShipping)
         {
             _manageShipping = manageShipping;
         }
@@ -38,5 +38,34 @@ namespace ECommerce.Controllers.API
                 return StatusCode(500, new { Status = "Error", Result = ex.Message });
             }
         }
+
+        [HttpDelete("Delete/{shippingId}")]
+        public async Task<IActionResult> DeleteShipping(int shippingId)
+        {
+            var dbResult = await _manageShipping.DeleteShipping(shippingId);
+            return Ok(dbResult);
+        }
+
+        [HttpGet("Get/{shippingId}")]
+        public async Task<IActionResult> GetData(int shippingId)
+        {
+            var dbResult = await _manageShipping.GetData(shippingId);
+            return Ok(dbResult);
+        }
+
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAllData()
+        {
+            var dbResult = await _manageShipping.GetAllData();
+            return Ok(dbResult);
+        }
+
+        [HttpGet("GetByOrder/{orderId}")]
+        public async Task<IActionResult> GetDataByOrderId(int orderId)
+        {
+            var dbResult = await _manageShipping.GetDataByOrderId(orderId);
+            return Ok(dbResult);
+        }
+
     }
 }

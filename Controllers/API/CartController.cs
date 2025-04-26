@@ -10,11 +10,13 @@ namespace ECommerce.Controllers.API
     public class CartController : ControllerBase
     {
         private readonly ManageCart _manageCart;
+
         public CartController(ManageCart manageCart)
         {
             _manageCart = manageCart;
         }
 
+        // Save or Update Cart
         [HttpPost("Save")]
         public async Task<IActionResult> SaveCart([FromBody] Cart model)
         {
@@ -31,6 +33,68 @@ namespace ECommerce.Controllers.API
                 {
                     Status = dbResult.Status == "Success" ? "OK" : "Fail",
                     Result = dbResult.Result
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Status = "Error", Result = ex.Message });
+            }
+        }
+
+        // Delete Cart by Id
+        [HttpDelete("Delete/{cartId}")]
+        public async Task<IActionResult> DeleteCart(int cartId)
+        {
+            try
+            {
+                var dbResult = await _manageCart.DeleteCart(cartId);
+
+                return Ok(new
+                {
+                    Status = dbResult.Status == "Success" ? "OK" : "Fail",
+                    Result = dbResult.Result
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Status = "Error", Result = ex.Message });
+            }
+        }
+
+        // Get All Carts
+        [HttpGet("GetAll")]
+        public async Task<IActionResult> GetAllCarts()
+        {
+            try
+            {
+                var dbResult = await _manageCart.GetAllCarts();
+
+                return Ok(new
+                {
+                    Status = dbResult.Status == "Success" ? "OK" : "Fail",
+                    Result = dbResult.Result,
+                    Data = dbResult.Data
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Status = "Error", Result = ex.Message });
+            }
+        }
+
+        // Get Carts by RegistrationId
+        [HttpGet("GetByRegId/{regId}")]
+        public async Task<IActionResult> GetData(int regId)
+        {
+            try
+            {
+                var dbResult = await _manageCart.GetData(regId);
+
+                return Ok(new
+                {
+                    Status = dbResult.Status == "Success" ? "OK" : "Fail",
+                    Result = dbResult.Result,
+                    Data = dbResult.Data
                 });
             }
             catch (Exception ex)
