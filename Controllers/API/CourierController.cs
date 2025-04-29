@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using DatabaseLayer.ApplicationContext;
 using DatabaseLayer.DBOperation;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,9 +13,9 @@ namespace ECommerce.Controllers.API
     {
         private readonly ManageCourier _manageCourier;
 
-        public CourierController(ManageCourier manageCourier)
+        public CourierController(ApplicationDBContext dbContext)
         {
-            _manageCourier = manageCourier;
+            _manageCourier = new ManageCourier(dbContext);
         }
 
         // Save or update a courier

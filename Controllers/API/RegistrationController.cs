@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using DatabaseLayer.ApplicationContext;
 using DatabaseLayer.DBOperation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,9 @@ namespace ECommerce.Controllers.API
     {
         private readonly ManageRegistration _manageRegistration;
 
-        public RegistrationController(ManageRegistration manageRegistration)
+        public RegistrationController(ApplicationDBContext dBContext)
         {
-            _manageRegistration = manageRegistration;
+            _manageRegistration = new ManageRegistration(dBContext);
         }
 
         [HttpPost("Save")]
@@ -50,8 +51,7 @@ namespace ECommerce.Controllers.API
                 return Ok(new
                 {
                     Status = dbResult.Status == "Success" ? "OK" : "Fail",
-                    Result = dbResult.Result,
-                    Data = dbResult.Data
+                    Result = dbResult.Result
                 });
             }
             catch (Exception ex)

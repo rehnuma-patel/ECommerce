@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using DatabaseLayer.ApplicationContext;
 using DatabaseLayer.DBOperation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,9 @@ namespace ECommerce.Controllers.API
     {
         private readonly ManageProductvarient _manageProductvarient;
 
-        public ProductVarientController(ManageProductvarient manageProductvarient)
+        public ProductVarientController(ApplicationDBContext dBContext)
         {
-            _manageProductvarient = manageProductvarient;
+            _manageProductvarient = new ManageProductvarient(dBContext);
         }
 
         // Save Product Variant

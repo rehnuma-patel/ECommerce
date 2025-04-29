@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using DatabaseLayer.ApplicationContext;
 using DatabaseLayer.DBOperation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,10 +14,9 @@ namespace ECommerce.Controllers.API
     {
         private readonly ManageOrder _manageOrder;
 
-        // Constructor injection for ManageOrder
-        public OrderController(ManageOrder manageOrder)
+        public OrderController(ApplicationDBContext dBContext)
         {
-            _manageOrder = manageOrder;
+            _manageOrder = new ManageOrder(dBContext);
         }
 
         // Save order (create or update)

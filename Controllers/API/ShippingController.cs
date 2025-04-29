@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using DatabaseLayer.ApplicationContext;
 using DatabaseLayer.DBOperation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +11,9 @@ namespace ECommerce.Controllers.API
     {
         private readonly ManageShipping _manageShipping;
 
-        public ShippingController(ManageShipping manageShipping)
+        public ShippingController(ApplicationDBContext dBContext)
         {
-            _manageShipping = manageShipping;
+            _manageShipping = new ManageShipping(dBContext);
         }
 
         [HttpPost("Save")]

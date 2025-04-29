@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using DatabaseLayer.ApplicationContext;
 using DatabaseLayer.DBOperation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,9 @@ namespace ECommerce.Controllers.API
     public class CategoryController : ControllerBase
     {
         private readonly ManageCategory _manageCategory;
-
-        public CategoryController(ManageCategory manageCategory)
+        public CategoryController(ApplicationDBContext dbContext)
         {
-            _manageCategory = manageCategory;
+            _manageCategory = new ManageCategory(dbContext);
         }
 
         // Save Category

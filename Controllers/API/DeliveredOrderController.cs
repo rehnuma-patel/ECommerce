@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using DatabaseLayer.ApplicationContext;
 using DatabaseLayer.DBOperation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,9 +11,9 @@ namespace ECommerce.Controllers.API
     {
         private readonly ManageDelivredOrder _manageDelivredOrder;
 
-        public DeliveredOrderController(ManageDelivredOrder manageDelivredOrder)
+        public DeliveredOrderController(ApplicationDBContext dbContext)
         {
-            _manageDelivredOrder = manageDelivredOrder;
+            _manageDelivredOrder = new ManageDelivredOrder(dbContext);
         }
 
         [HttpPost("Save")]

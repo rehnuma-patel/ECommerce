@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using DatabaseLayer.ApplicationContext;
 using DatabaseLayer.DBOperation;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -12,9 +13,9 @@ namespace ECommerce.Controllers.API
     {
         private readonly ManageOrderDetail _manageOrderDetail;
 
-        public OrderDetailController(ManageOrderDetail manageOrderDetail)
+        public OrderDetailController(ApplicationDBContext dBContext)
         {
-            _manageOrderDetail = manageOrderDetail;
+            _manageOrderDetail = new ManageOrderDetail(dBContext);
         }
 
         [HttpPost("Save")]

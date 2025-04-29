@@ -69,8 +69,7 @@ namespace ECommerce.Controllers.API
                 return Ok(new
                 {
                     Status = dbResult.Status == "Success" ? "OK" : "Fail",
-                    Result = dbResult.Result,
-                    Data = dbResult.Data
+                    Result = dbResult.Result
                 });
             }
             catch (Exception ex)
@@ -89,8 +88,7 @@ namespace ECommerce.Controllers.API
                 return Ok(new
                 {
                     Status = dbResult.Status == "Success" ? "OK" : "Fail",
-                    Result = dbResult.Result,
-                    Data = dbResult.Data
+                    Result = dbResult.Result
                 });
             }
             catch (Exception ex)

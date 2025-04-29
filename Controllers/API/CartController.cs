@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using DatabaseLayer.ApplicationContext;
 using DatabaseLayer.DBOperation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,9 @@ namespace ECommerce.Controllers.API
     {
         private readonly ManageCart _manageCart;
 
-        public CartController(ManageCart manageCart)
+        public CartController(ApplicationDBContext dBContext)
         {
-            _manageCart = manageCart;
+            _manageCart = new ManageCart(dBContext);
         }
 
         // Save or Update Cart
@@ -72,8 +73,7 @@ namespace ECommerce.Controllers.API
                 return Ok(new
                 {
                     Status = dbResult.Status == "Success" ? "OK" : "Fail",
-                    Result = dbResult.Result,
-                    Data = dbResult.Data
+                    Result = dbResult.Result
                 });
             }
             catch (Exception ex)
@@ -89,12 +89,10 @@ namespace ECommerce.Controllers.API
             try
             {
                 var dbResult = await _manageCart.GetData(regId);
-
                 return Ok(new
                 {
                     Status = dbResult.Status == "Success" ? "OK" : "Fail",
-                    Result = dbResult.Result,
-                    Data = dbResult.Data
+                    Result = dbResult.Result
                 });
             }
             catch (Exception ex)

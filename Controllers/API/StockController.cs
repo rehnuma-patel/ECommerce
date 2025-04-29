@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using DatabaseLayer.ApplicationContext;
 using DatabaseLayer.DBOperation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,9 +14,9 @@ namespace ECommerce.Controllers.API
     {
         private readonly ManageStock _manageStock;
 
-        public StockController(ManageStock manageStock)
+        public StockController(ApplicationDBContext dBContext)
         {
-            _manageStock = manageStock;
+            _manageStock = new ManageStock(dBContext);
         }
 
         // Save Stock (POST)

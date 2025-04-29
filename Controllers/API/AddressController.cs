@@ -1,4 +1,5 @@
 ﻿using BusinessLayer;
+using DatabaseLayer.ApplicationContext;
 using DatabaseLayer.DBOperation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,9 +12,9 @@ namespace ECommerce.Controllers.API
     {
         private readonly ManageCustomerAddress _manageCustomerAddress;
 
-        public AddressController(ManageCustomerAddress manageCustomerAddress)
+        public AddressController(ApplicationDBContext dBContext)
         {
-            _manageCustomerAddress = manageCustomerAddress;
+            _manageCustomerAddress = new ManageCustomerAddress(dBContext);
         }
 
         [HttpPost("Save")]
@@ -69,8 +70,7 @@ namespace ECommerce.Controllers.API
                 return Ok(new
                 {
                     Status = dbResult.Status == "Success" ? "OK" : "Fail",
-                    Result = dbResult.Result,
-                    Data = dbResult.Data
+                    Result = dbResult.Result
                 });
             }
             catch (Exception ex)
@@ -89,8 +89,7 @@ namespace ECommerce.Controllers.API
                 return Ok(new
                 {
                     Status = dbResult.Status == "Success" ? "OK" : "Fail",
-                    Result = dbResult.Result,
-                    Data = dbResult.Data
+                    Result = dbResult.Result
                 });
             }
             catch (Exception ex)
