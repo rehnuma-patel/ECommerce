@@ -1,0 +1,184 @@
+﻿@{
+    ViewData["title"] = "Product";
+    ViewData["description"] = "Product";
+    ViewData["author"] = "Rehnuma Patel";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+<div class="page-content">
+    <div class="container-fluid">
+        <!-- Page Header -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-flex align-items-center justify-content-between bg-primary bg-opacity-10 rounded p-3 shadow-sm">
+                    <h4 class="mb-0 text-primary">
+                        <i class="fas fa-tags-fill me-2"></i>Product
+                    </h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="#">Admin</a></li>
+                            <li class="breadcrumb-item active">Product</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Form -->
+        <div class="row mt-4">
+            <div class="col-xxl-12">
+                <div class="card shadow rounded-3 border-0">
+                    <div class="card-header bg-light d-flex align-items-center">
+                        <h5 class="card-title mb-0 text-dark">
+                            <i class="fas fa-plus-circle-dotted me-2"></i>Add Product
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="categoryForm" enctype="multipart/form-data" method="post">
+                            <input type="hidden" id="txtId" value="0" />
+                            <div class="row gy-4">
+                                <div class="col-md-6 mt-2">
+                                    <!-- Category -->
+                                    <div class="col-md-12 mt-2">
+                                        <label for="CategoryId" class="form-label">Category</label>
+                                        <select id="CategoryId" name="CategoryId" class="form-select" required>
+                                            <option>Loading...</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Brand & Title -->
+                                    <div class="row g-4 mt-2">
+                                        <div class="col-md-6 mt-2">
+                                            <label for="Brand" class="form-label">Brand</label>
+                                            <input type="text" class="form-control" id="Brand" name="Brand" placeholder="Enter Brand" required />
+                                        </div>
+                                        <div class="col-md-6 mt-2">
+                                            <label for="Title" class="form-label">Title</label>
+                                            <input type="text" class="form-control" id="Title" name="Title" placeholder="Enter Title" required />
+                                        </div>
+
+                                        <!-- SEO & VAT -->
+                                        <div class="col-md-6 mt-2">
+                                            <label for="SEOKeywords" class="form-label">SEO Keywords</label>
+                                            <input type="text" class="form-control" id="SEOKeywords" name="SEOKeywords" placeholder="Enter SEO Keywords" />
+                                        </div>
+                                        <div class="col-md-6 mt-2">
+                                            <label for="VAT" class="form-label">VAT (%)</label>
+                                            <input type="number" step="0.01" class="form-control" id="VAT" name="VAT" placeholder="Enter VAT (e.g. 12.5)" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6 mt-2">
+                                    <!-- Description -->
+                                    <div class="col-md-12 mt-2">
+                                        <label for="Description" class="form-label">Description</label>
+                                        <textarea class="form-control" id="Description" name="Description" style="height: 100px;" placeholder="Enter Description" required></textarea>
+                                    </div>
+
+                                    <!-- Brief Description -->
+                                    <div class="col-md-12 mt-2">
+                                        <label for="Brief_Description" class="form-label">Brief Description</label>
+                                        <textarea class="form-control" id="Brief_Description" name="Brief_Description" style="height: 80px;" placeholder="Short product summary..."></textarea>
+                                    </div>
+                                </div>
+
+                                <!-- Main Photo Upload -->
+                                <div class="col-md-12 mt-2">
+                                    <label class="form-label">Main Product Photo</label>
+                                    <div class="input-group">
+                                        <input type="file" name="MainImage" class="form-control" accept="image/*" required />
+                                    </div>
+                                </div>
+
+                                <!-- Product Specifications -->
+                                <div class="col-md-12 mt-3">
+                                    <label class="form-label">Product Specifications</label>
+                                    <div id="specification-list">
+                                        <div class="row g-2 mb-2">
+                                            <div class="col-md-5">
+                                                <input type="text" name="ProductSpecifications[0].Key" class="form-control" placeholder="Specification Name" required />
+                                            </div>
+                                            <div class="col-md-5">
+                                                <input type="text" name="ProductSpecifications[0].Value" class="form-control" placeholder="Specification Value" required />
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-danger w-100" onclick="removeSpecField(this)">Remove</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="btn btn-sm btn-primary" onclick="addSpecField()">Add More</button>
+                                </div>
+
+                                <!-- Result/Error -->
+                                <div class="col-12">
+                                    <ul id="lblResult" class="text-danger"></ul>
+                                </div>
+
+                                <!-- Buttons -->
+                                <div class="col-12 text-end">
+                                    <button type="submit" id="btnSave" class="btn btn-success px-4">
+                                        <i class="fas fa-save me-1"></i> Add Product
+                                    </button>
+                                    <button type="button" onclick="cancelForm()" class="btn btn-secondary px-4 ms-2">
+                                        <i class="fas fa-times me-1"></i> Cancel
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Load Categories + Specification Script -->
+<script>
+    // Load Categories
+    $.ajax({
+        url: "@Url.Content("~/api/Category/GetAll")",
+        method: "GET",
+        success: function (res) {
+            if (res.status === "Success") {
+                let options = `<option value="">-- Select Category --</option>`;
+                res.result.forEach(o => {
+                    options += `<option value="${o.id}">${o.name}</option>`;
+                });
+                $("#CategoryId").html(options);
+            }
+        },
+        error: function (err) {
+            console.log(err);
+            $("#CategoryId").html('<option>Error loading</option>');
+        }
+    });
+
+    // Add/Remove Specification Fields
+    let specIndex = 1;
+
+    function addSpecField() {
+        const html = `
+        <div class="row g-2 mb-2">
+            <div class="col-md-5">
+                <input type="text" name="ProductSpecifications[${specIndex}].Key" class="form-control" placeholder="Specification Name" required />
+            </div>
+            <div class="col-md-5">
+                <input type="text" name="ProductSpecifications[${specIndex}].Value" class="form-control" placeholder="Specification Value" required />
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-danger w-100" onclick="removeSpecField(this)">Remove</button>
+            </div>
+        </div>`;
+        $('#specification-list').append(html);
+        specIndex++;
+    }
+
+    function removeSpecField(button) {
+        $(button).closest('.row').remove();
+    }
+
+    function cancelForm() {
+        window.location.href = "@Url.Action("Index", "Product")";
+    }
+</script>

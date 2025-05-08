@@ -1,0 +1,141 @@
+﻿@{
+    ViewData["title"] = "Category";
+    ViewData["description"] = "Category";
+    ViewData["author"] = "Rehnuma Patel";
+    Layout = "~/Views/Shared/_adminLayout.cshtml";
+}
+
+<div class="page-content">
+    <div class="container-fluid">
+
+        <!-- Page Header -->
+        <div class="row">
+            <div class="col-12">
+                <div class="page-title-box d-flex align-items-center justify-content-between bg-primary bg-opacity-10 rounded p-3 shadow-sm">
+                    <h4 class="mb-0 text-primary">
+                        <i class="bi bi-tags-fill me-2"></i>Category
+                    </h4>
+                    <div class="page-title-right">
+                        <ol class="breadcrumb m-0">
+                            <li class="breadcrumb-item"><a href="#">Admin</a></li>
+                            <li class="breadcrumb-item active">Category</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Form -->
+        <div class="row mt-4">
+            <div class="col-xxl-12">
+                <div class="card shadow rounded-3 border-0 animate__animated animate__fadeIn">
+                    <div class="card-header bg-light d-flex align-items-center">
+                        <h5 class="card-title mb-0 text-dark">
+                            <i class="bi bi-plus-circle-dotted me-2"></i>Add Category
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <form id="categoryForm">
+                            <input type="hidden" id="txtId" value="0" />
+
+                            <div class="row gy-4">
+                                <div class="col-md-6">
+                                    <label for="Name" class="form-label">Name</label>
+                                    <input type="text" class="form-control" id="Name" name="Name" placeholder="Enter category name" required />
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="Attributes" class="form-label">Attribute</label>
+                                    <input type="text" class="form-control" id="Attributes" name="Attributes" placeholder="Enter attribute" required />
+                                </div>
+
+                                <div class="col-12">
+                                    <ul id="lblResult" class="text-danger"></ul>
+                                </div>
+
+                                <div class="col-12 text-end">
+                                    <button type="button" name="btnSave" id="btnSave" class="btn btn-success px-4">
+                                        <i class="fas fa-file me-1"></i> Add Category
+                                    </button>
+                                    <button type="button" onclick="cancelForm()" class="btn btn-secondary px-4 ms-2">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- AJAX Script -->
+<script>
+    function cancelForm() {
+        $("#txtId").val("0");
+        $("#Name").val("");
+        $("#Attributes").val("");
+        $("#lblResult").html("");
+        $("#btnSave").html(`<i class="fas fa-file me-1"></i> Add Category`);
+    }
+
+    $(document).ready(function () {
+        $("#btnSave").click(function () {
+            let requestData = {
+                "Id": $("#txtId").val(),
+                "Name": $("#Name").val(),
+                "Attribute": $("#Attributes").val()
+            };
+
+            console.log("Sending data:", requestData);
+
+            $("#btnSave").prop("disabled", true);
+            $("#btnSave").html(`<i class="fa fa-spinner fa-spin me-1"></i> Please Wait`);
+
+            let path = "@Url.Content("~/api/Category/Save")";
+
+            $.ajax({
+                url: path,
+                contentType: "application/json",
+                method: "POST",
+                data: JSON.stringify(requestData),
+                success: function (res) {
+                    console.log("Response:", res);
+                    $("#btnSave").prop("disabled", false);
+
+                    if (res.status === "Success") {
+                        $("#lblResult").html("");
+                        SuccessAlert("Saved Successfully");
+                        cancelForm();
+
+                        // if you're using DataTable
+                        if (typeof dt !== 'undefined') {
+                            dt.ajax.reload(null, false);
+                        }
+
+                    } else {
+                        let content = res.result.map(o => `<li>${o}</li>`).join("");
+                        $("#lblResult").html(content);
+                        DangerAlert("Failed to Save");
+                    }
+
+                    $("#btnSave").html(`<i class="fas fa-file me-1"></i> Add Category`);
+                },
+                error: function (err) {
+                    console.error("Error:", err);
+                    DangerAlert("An error occurred");
+                    $("#btnSave").prop("disabled", false);
+                    $("#btnSave").html(`<i class="fas fa-file me-1"></i> Add Category`);
+                }
+            });
+        });
+    });
+
+    // Optional placeholder for alert functions
+    function SuccessAlert(msg) {
+        alert(msg);
+    }
+
+    function DangerAlert(msg) {
+        alert(msg);
+    }
+</script>
